@@ -58,6 +58,13 @@ class Cell:
         self.__y2 = -1
         self._win = win
 
+    def get_center(self):
+        size_x = self.__x2 - self.__x1
+        size_y = self.__y2 - self.__y1
+        center_x = self.__x1 + size_x / 2
+        center_y = self.__y1 + size_y / 2
+        return Point(center_x, center_y)
+
     def draw(self, x1, x2, y1, y2):
         self.__x1 = x1
         self.__x2 = x2
@@ -84,6 +91,19 @@ class Cell:
             line = Line(point1, point2)
             self._win.draw_line(line, "black")
 
+    def draw_move(self, to_cell: Cell, undo=False):
+        if not undo:
+            color = "red"
+        else: 
+            color = "gray"
+
+        point1 = self.get_center()
+        point2 = to_cell.get_center()
+        line = Line(point1, point2)
+        self._win.draw_line(line, color)
+        
+
+
 
 def main():
     win = Window(800, 600)
@@ -91,6 +111,9 @@ def main():
     cell.has_top_wall = False
     cell.has_right_wall = False
     cell.draw(100, 200, 100, 200)
+    cell2 = Cell(win)
+    cell2.draw(200, 300, 200, 300)
+    cell.draw_move(cell2)
     win.wait_for_close()
         
 
