@@ -47,7 +47,7 @@ class Line:
                             width=2)
         
 class Cell:
-    def __init__(self, win: Window):
+    def __init__(self, win: Window=None):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -101,19 +101,56 @@ class Cell:
         point2 = to_cell.get_center()
         line = Line(point1, point2)
         self._win.draw_line(line, color)
+
+class Maze:
+    def __init__(
+            self,
+            x1,
+            y1,
+            num_rows,
+            num_cols,
+            cell_size_x,
+            cell_size_y,
+            win: Window=None
+            ):
+        self.x1 = x1
+        self.y1 = y1
+        self.num_rows = num_rows
+        self.num_cols = num_cols
+        self.cell_size_x = cell_size_x
+        self.cell_size_y = cell_size_y
+        self.win = win
+        self.__cells = []
+        self.__create_cells()
+    
+    def __create_cells(self):
+        for col in range(self.num_cols):
+            self.__cells.append([])
+            for row in range(self.num_rows):
+                cell = Cell(self.win)
+                self.__cells[col].append(cell)
+                self.__draw_cell(col, row)
+
+    def __draw_cell(self, col, row):
+        x1 = self.x1 + col * self.cell_size_x
+        y1 = self.y1 + row * self.cell_size_y
+        x2 = x1 + self.cell_size_x
+        y2 = y1 + self.cell_size_y
+        self.__cells[col][row].draw(x1, x2, y1, y2)
+        self.__animate()
+    
+    def __animate(self):
+        if self.win:
+            self.win.redraw()
+        import time
+        time.sleep(0.05)
         
 
 
 
 def main():
     win = Window(800, 600)
-    cell = Cell(win)
-    cell.has_top_wall = False
-    cell.has_right_wall = False
-    cell.draw(100, 200, 100, 200)
-    cell2 = Cell(win)
-    cell2.draw(200, 300, 200, 300)
-    cell.draw_move(cell2)
+    maze = Maze(10, 10, 20, 30, 20, 20, win)
     win.wait_for_close()
         
 
