@@ -93,6 +93,3 @@ Development tips
 - If you want to iterate faster during development, set the animation sleep to a smaller value in `cell.py` or patch `cell.time.sleep` to a no-op in your test harness.
 - Consider adding a `delay` parameter to `Maze` or `Window` to control animation speed at runtime without touching the code.
 
-Contact
--------
-If you want me to add a `README.md` (markdown) as well, or wire a `delay` option into the API and tests, tell me which and I will implement it.
