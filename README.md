@@ -1,5 +1,7 @@
 MazeSolver-Py
 
+![Screenshot](maze.jpg)
+   
 Overview
 --------
 MazeSolver-Py is a small Python project that builds and visually solves mazes using tkinter. The project separates UI (`window.py`), cell logic (`cell.py`) and maze generation/solver (`maze.py`). This document explains how to set up and run the window, create a maze programmatically, configure animation, and run tests.
