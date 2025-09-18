@@ -121,18 +121,18 @@ class MazeTests(unittest.TestCase):
         c1.draw_move(c2, undo=False)
         self.assertEqual(len(win.drawn), 1)
         line, color = win.drawn[0]
-        self.assertEqual(color, "red")
+        self.assertEqual(color, "gray")
         self.assertEqual(line.start.x, c1.get_center().x)
         self.assertEqual(line.start.y, c1.get_center().y)
         self.assertEqual(line.end.x, c2.get_center().x)
         self.assertEqual(line.end.y, c2.get_center().y)
 
-        # test undo draws gray
+    # test undo draws red (backtracking)
         win.drawn.clear()
         c1.draw_move(c2, undo=True)
         self.assertEqual(len(win.drawn), 1)
         _, color = win.drawn[0]
-        self.assertEqual(color, "gray")
+        self.assertEqual(color, "red")
 
     @patch("maze.time.sleep", return_value=None)
     def test_maze_creates_expected_grid(self, _sleep):

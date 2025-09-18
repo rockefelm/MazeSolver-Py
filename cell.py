@@ -1,5 +1,6 @@
 from __future__ import annotations
 from window import Line, Point, Window
+import time
 
 class Cell:
     def __init__(self, win: Window=None):
@@ -49,13 +50,23 @@ class Cell:
     def draw_move(self, to_cell: Cell, undo=False):
         if self._win is None:
             return
-        
+        # Normal move is drawn in gray; when undo/backtracking set to red
         if not undo:
-            color = "red"
-        else: 
             color = "gray"
+        else:
+            color = "red"
 
         point1 = self.get_center()
         point2 = to_cell.get_center()
         line = Line(point1, point2)
         self._win.draw_line(line, color)
+        # animate the move (redraw + short sleep) if the window supports it
+        try:
+            self._win.redraw()
+        except Exception:
+            pass
+        # keep the small delay for visible animation in UI runs
+        try:
+            time.sleep(0.05)
+        except Exception:
+            pass

@@ -125,3 +125,56 @@ class Maze:
         for col in range(self.num_cols):
             for row in range(self.num_rows):
                 self.__cells[col][row].visited = False
+
+    def solve(self):
+        return self._solve_r(0,0)
+    
+    def _solve_r(self, col, row):
+        if self.__cells[col][row].visited:
+            return False
+        self.__cells[col][row].visited = True
+        # visiting a cell; drawing/animation is handled by Cell.draw_move
+
+        # if we've reached the exit cell
+        if col == self.num_cols - 1 and row == self.num_rows - 1:
+            return True
+        
+        # try moving in each possible direction; draw the forward move before recursing
+        # right
+        if not self.__cells[col][row].has_right_wall and not self.__cells[col + 1][row].visited:
+            # draw forward
+            self.__cells[col][row].draw_move(self.__cells[col + 1][row], undo=False)
+            if self._solve_r(col + 1, row):
+                return True
+            # backtrack visually
+            self.__cells[col][row].draw_move(self.__cells[col + 1][row], undo=True)
+        # down
+        if not self.__cells[col][row].has_bottom_wall and not self.__cells[col][row + 1].visited:
+            self.__cells[col][row].draw_move(self.__cells[col][row + 1], undo=False)
+            if self._solve_r(col, row + 1):
+                return True
+            self.__cells[col][row].draw_move(self.__cells[col][row + 1], undo=True)
+        # left
+        if not self.__cells[col][row].has_left_wall and not self.__cells[col - 1][row].visited:
+            self.__cells[col][row].draw_move(self.__cells[col - 1][row], undo=False)
+            if self._solve_r(col - 1, row):
+                return True
+            self.__cells[col][row].draw_move(self.__cells[col - 1][row], undo=True)
+        # up
+        if not self.__cells[col][row].has_top_wall and not self.__cells[col][row - 1].visited:
+            self.__cells[col][row].draw_move(self.__cells[col][row - 1], undo=False)
+            if self._solve_r(col, row - 1):
+                return True
+            self.__cells[col][row].draw_move(self.__cells[col][row - 1], undo=True)
+        
+        # backtrack - no valid moves from here
+        # draw the backtrack move (undo) in red
+        if col > 0 and not self.__cells[col][row].has_left_wall and self.__cells[col - 1][row].visited:
+            self.__cells[col][row].draw_move(self.__cells[col - 1][row], undo=True)
+        elif col < self.num_cols - 1 and not self.__cells[col][row].has_right_wall and self.__cells[col + 1][row].visited:
+            self.__cells[col][row].draw_move(self.__cells[col + 1][row], undo=True)
+        elif row > 0 and not self.__cells[col][row].has_top_wall and self.__cells[col][row - 1].visited:
+            self.__cells[col][row].draw_move(self.__cells[col][row - 1], undo=True)
+        elif row < self.num_rows - 1 and not self.__cells[col][row].has_bottom_wall and self.__cells[col][row +1].visited:
+            self.__cells[col][row].draw_move(self.__cells[col][row + 1], undo=True)
+        return False
