@@ -16,6 +16,11 @@ class Maze:
             win: Window=None,
             seed=None
             ):
+        # Validate dimensions early to provide a clear error for callers
+        if not isinstance(num_rows, int) or not isinstance(num_cols, int):
+            raise TypeError("num_rows and num_cols must be integers")
+        if num_rows <= 0 or num_cols <= 0:
+            raise ValueError("num_rows and num_cols must be positive integers")
         self.x1 = x1
         self.y1 = y1
         self.num_rows = num_rows
@@ -34,6 +39,7 @@ class Maze:
         self.__create_cells()
         self.__break_entrance_and_exit()
         self.__break_walls_r(0, 0)
+        self.__reset_cells_visited()
     
     def __create_cells(self):
         for col in range(self.num_cols):
@@ -113,3 +119,9 @@ class Maze:
 
             # recursively visit the next cell
             self.__break_walls_r(next_index[0], next_index[1])
+    
+    def __reset_cells_visited(self):
+        
+        for col in range(self.num_cols):
+            for row in range(self.num_rows):
+                self.__cells[col][row].visited = False
